@@ -4,12 +4,12 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-class RandomWordFinder implements Closeable {
+class VyhladavacRandomSlov implements Closeable {
 
     private RandomAccessFile file;
 
-    RandomWordFinder() throws FileNotFoundException, URISyntaxException {
-        URL url = this.getClass().getResource("/org/games/resources/words.txt");
+    VyhladavacRandomSlov() throws FileNotFoundException, URISyntaxException {
+        URL url = this.getClass().getResource("/slova.txt");
         System.out.println(url.getPath());
         File f = new File(url.toURI());
         file = new RandomAccessFile(f, "r");

@@ -11,7 +11,7 @@ class GameController {
 
     private static final int MAX_WRONG_GUESSES = 7;
 
-    private RandomWordFinder rndWordFinder;
+    private VyhladavacRandomSlov rndWordFinder;
     private String rndWord;
 
     private List<Character> enteredChars;
@@ -22,7 +22,7 @@ class GameController {
         enteredChars = new ArrayList<>();
         wrongGuesses = 0;
         try {
-            rndWordFinder = new RandomWordFinder();
+            rndWordFinder = new VyhladavacRandomSlov();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
