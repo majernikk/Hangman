@@ -1,11 +1,15 @@
 package org.games.hangman;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 class GameController {
 
@@ -16,11 +20,14 @@ class GameController {
 
     private List<Character> enteredChars;
     private int wrongGuesses;
+    private static Instant start;
+    public static Double koniec;
+    public int navyse=0;
 
     GameController() {
-
         enteredChars = new ArrayList<>();
         wrongGuesses = 0;
+        start = Instant.now();
         try {
             rndWordFinder = new VyhladavacRandomSlov();
         } catch (FileNotFoundException e) {
@@ -64,10 +71,59 @@ class GameController {
         return word;
     }
 
+    void save(){
+        try {
+            File file = new File("ukladanie.txt");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter zapisovac = new BufferedWriter(fw);
+            //to co ukladame
+            zapisovac.write(String.valueOf(wrongGuesses));
+            zapisovac.newLine();
+            //TODO
+            for (char c:enteredChars) {
+                zapisovac.append(c);
+            }
+            zapisovac.newLine();
+
+            zapisovac.write(rndWord);
+            zapisovac.newLine();
+            zapisovac.write(""+Duration.between(start, Instant.now()).toMillis());
+            zapisovac.flush();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing.");
+            e.printStackTrace();
+        }
+    }
+    void load() {
+        File file = new File("ukladanie.txt");
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file)))
+        {
+            wrongGuesses=Integer.valueOf(br.readLine());
+            String tmp = br.readLine();
+            tmp = tmp.trim();
+            enteredChars.clear();
+            for (char c: tmp.toCharArray()){
+                enteredChars.add(c);
+            }
+            rndWord= br.readLine();
+            navyse= Integer.parseInt(br.readLine());
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading.");
+            e.printStackTrace();
+        }
+    }
     void reset() {
         wrongGuesses = 0;
         enteredChars.clear();
         setNewRandomWord();
+        start = Instant.now();
+        navyse=0;
     }
 
     private void setNewRandomWord() {
@@ -111,7 +167,10 @@ class GameController {
                 return false;
             }
         }
-
+        Instant finish = Instant.now();
+        koniec = ((double) Duration.between(start, finish).toMillis()+navyse) /1000;
+        System.out.println("Cas: "+koniec);
         return true;
     }
+
 }

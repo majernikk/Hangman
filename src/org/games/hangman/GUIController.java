@@ -1,5 +1,6 @@
 package org.games.hangman;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,8 +20,13 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import org.games.controls.LetterTextField;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static org.games.hangman.GameController.koniec;
 
 public class GUIController implements Initializable {
 
@@ -37,6 +43,7 @@ public class GUIController implements Initializable {
     private Canvas canvas;
     private GraphicsContext gc;
     private GameController gameController;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -98,15 +105,41 @@ public class GUIController implements Initializable {
     }
 
     @FXML
-    private void handleNewGame(final ActionEvent event)
-    {
+    private void handleNewGame(final ActionEvent event) {
         resetGame();
+    }
+    @FXML
+    private void handleSaveGame(ActionEvent actionEvent) throws IOException {
+        saveGame();
+    }
+    @FXML
+    private void handleLoadGame(ActionEvent actionEvent) {
+        loadGame();
+    }
+    @FXML
+    public void exitApplication(ActionEvent event) {
+        Platform.exit();
     }
 
     private void disableGame() {
         txtInput.setDisable(true);
     }
 
+    private void saveGame() {
+       gameController.save();
+    }
+    private void loadGame() {
+        gameController.load();
+        txtEntered.clear();
+        txtInput.setDisable(false);
+        gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
+        updateEnteredChars();
+        updateWord();
+        //TODO wrong guesses
+        for (int i = 1; i <= gameController.getWrongGuesses(); i++) {
+            drawHangman(i);
+        }
+    }
     private void resetGame() {
         gameController.reset();
         txtEntered.clear();
@@ -120,7 +153,8 @@ public class GUIController implements Initializable {
         gc.setFill(Color.GREEN);
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
-        gc.fillText("You Won!", Math.round(canvas.getWidth() / 2), Math.round(canvas.getHeight()) / 2);
+        gc.fillText("Vyhral si!", Math.round(canvas.getWidth() / 2), Math.round(canvas.getHeight()) / 2);
+        gc.fillText(String.valueOf(koniec)+"s", Math.round(canvas.getWidth() / 2), (Math.round(canvas.getHeight())/2)-40);
     }
 
     private void drawGameOver() {
@@ -128,7 +162,7 @@ public class GUIController implements Initializable {
         gc.setFill(Color.RED);
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
-        gc.fillText("Game Over!", Math.round(canvas.getWidth() / 2), Math.round(canvas.getHeight()) / 2);
+        gc.fillText("Prehral si :(", Math.round(canvas.getWidth() / 2), Math.round(canvas.getHeight()) / 2);
     }
 
     private void drawHangman(int wrongGuesses) {
@@ -222,4 +256,5 @@ public class GUIController implements Initializable {
         gameController.getEnteredChars().stream().sorted().forEach(i -> enteredFormatted.append(i).append(","));
         txtEntered.setText(enteredFormatted.toString().substring(0, enteredFormatted.length() - 1));
     }
+
 }
