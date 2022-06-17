@@ -16,7 +16,7 @@ Cieľom hry je uhádnuť slovo zadávaním jednotlivých písmen. Ak sme písmen
 ### Vyhratá hra:
 V prípade vyhratej hry sa nám zobrazí čas v sekundách, za ktorý sme slovo vyriešili.
 
-<img src="documentation/Hangman-Won.png" width="60%"></img>
+<img src="documentation/Hangman-Won.PNG" width="60%"></img>
 
 ### Prehratá hra:
 V prípade prehratej hry sa nám zobrazí slovo a informácia o tom, že sme prehrali.
