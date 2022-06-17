@@ -12,10 +12,12 @@ ___
 Cieľom hry je uhádnuť slovo zadávaním jednotlivých písmen. Ak sme písmeno trafili, hádame ďalej, pokiaľ neuhádneme slovo, ak sme netrafili vykreslí sa jedna z častí obesenca.
 
 <img src="documentation/game_progress.png" width="60%"></img>
+
 ### Vyhratá hra:
 V prípade vyhratej hry sa nám zobrazí čas v sekundách, za ktorý sme slovo vyriešili.
 
 <img src="documentation/Hangman-Won.png" width="60%"></img>
+
 ### Prehratá hra:
 V prípade prehratej hry sa nám zobrazí slovo a informácia o tom, že sme prehrali.
 
