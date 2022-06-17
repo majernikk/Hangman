@@ -20,3 +20,10 @@ V prípade vyhratej hry sa nám zobrazí čas v sekundách, za ktorý sme slovo 
 V prípade prehratej hry sa nám zobrazí slovo a informácia o tom, že sme prehrali.
 
 <img src="documentation/Hangman-GameOver.PNG" width="60%"></img>
+___
+##Server (logovanie)
+Hra komunikuje aj so serverom pre prípadné odkontrolovanie stavu hry. Do servera sa zapisujú správy aj presným časom kedy správy prišli
+
+<img src="documentation/server.PNG" width="60%"></img>
+
+### !!! Pre správne fungovanie je potrebné prv spustiť program servera, až potom samotnú hru!!!
