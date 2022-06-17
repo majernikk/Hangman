@@ -3,6 +3,7 @@ package org.games.hangman;
 import javafx.scene.control.Alert;
 
 import java.io.*;
+import java.net.Socket;
 import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.Instant;
@@ -28,6 +29,18 @@ class GameController {
 
     Alert a = new Alert(Alert.AlertType.NONE);
     Alert b = new Alert(Alert.AlertType.NONE);
+
+    static Socket socket;
+    static DataOutputStream dout;
+    {
+        try {
+            socket = new Socket("localhost",3333);
+            dout =new DataOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            System.out.println("Nevydarene spojenie so serverom.");;
+        }
+    }
+
 
     GameController() {
         enteredChars = new ArrayList<>();
@@ -141,6 +154,12 @@ class GameController {
         setNewRandomWord();
         start = Instant.now();
         navyse=0;
+        try {
+            dout.writeUTF("Spustena nova hra.");
+            dout.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setNewRandomWord() {
@@ -255,7 +274,8 @@ class GameController {
         try {
             //prikaz na vymazanie obsahu suboru
             new FileWriter(file, false).close();
-
+            dout.writeUTF("Resetovane skore.");
+            dout.flush();
         }catch (IOException e) {
             e.printStackTrace();
         }

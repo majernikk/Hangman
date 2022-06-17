@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static org.games.hangman.GameController.koniec;
+import static org.games.hangman.GameController.*;
 
 public class GUIController implements Initializable {
 
@@ -87,11 +87,23 @@ public class GUIController implements Initializable {
     private void checkGameOver() {
         if (gameController.isGameWon()) {
             // Return game won message
+            try {
+                dout.writeUTF("Vyhrata hra.");
+                dout.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             disableGame();
             drawWon();
 
         } else if (gameController.isGameOver()) {
             // Return game over message
+            try {
+                dout.writeUTF("Prehrata hra.");
+                dout.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             disableGame();
             drawGameOver();
             drawCorrectWord();
@@ -121,6 +133,12 @@ public class GUIController implements Initializable {
 
     @FXML
     public void exitApplication(ActionEvent event) {
+        try {
+            dout.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Platform.exit();
     }
 
@@ -146,7 +164,6 @@ public class GUIController implements Initializable {
                 drawHangman(i);
             }
         }catch(Exception e){
-            //TODO
         }
     }
     private void showScore() {
