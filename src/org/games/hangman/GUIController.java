@@ -97,7 +97,7 @@ public class GUIController implements Initializable {
             drawCorrectWord();
         }
     }
-
+    //metody vyvolane po kliknuti na tlacidla v aplikacii
     @FXML
     private void handleNewGame(final ActionEvent event) {
         resetGame();

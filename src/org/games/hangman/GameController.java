@@ -1,7 +1,6 @@
 package org.games.hangman;
 
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -69,15 +68,16 @@ class GameController {
         return missingChars;
     }
 
-    String getWord() {
+    /*String getWord() {
         String word = "";
         for (char c : rndWord.toCharArray()) {
             word += c + " ";
         }
         return word;
-    }
+    }*/
 
 //metoda na ukladanie stavu hry
+    //tu som si naštudoval dokumentaciu zapisov do suborov <-------------------------------------------------------------!!
     void save(){
         try {
             File file = new File("ukladanie.txt");
@@ -106,6 +106,7 @@ class GameController {
     }
 
     //metoda na nacitanie stavu hry
+    //tu som si naštudoval dokumentaciu nacitavania zo suborov <-------------------------------------------------------------!!
     void load() {
         File file = new File("ukladanie.txt");
         if (file.length() != 0) {
@@ -191,7 +192,7 @@ class GameController {
         System.out.println("Cas: "+koniec);
         return true;
     }
-
+    //zapisovanie skore do suboru
     private void writeScore(){
         try {
             File file = new File("scoreHistory.txt");
@@ -215,6 +216,7 @@ class GameController {
             e.printStackTrace();
         }
     }
+    //citanie skore zo suboru
     private void readScore(){
         File file = new File("scoreHistory.txt");
         if (file.length() != 0) {
@@ -230,7 +232,7 @@ class GameController {
             }
         }
     }
-
+    //ukazanie skore
     public void showScore() {
         scoreList.clear();
         readScore();
@@ -247,10 +249,11 @@ class GameController {
             b.setContentText("Neboli nájdené žiadne výsledky.");
         b.show();
     }
-
+    //resetovanie skore
     public void resetScore() {
         File file = new File("scoreHistory.txt");
         try {
+            //prikaz na vymazanie obsahu suboru
             new FileWriter(file, false).close();
 
         }catch (IOException e) {
