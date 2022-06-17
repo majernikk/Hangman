@@ -17,11 +17,16 @@
                         <Menu text="Herné Menu">
                             <items>
                                 <MenuItem onAction="#handleNewGame" text="Nová Hra" />
-                           <MenuItem mnemonicParsing="false" onAction="#handleSaveGame" text="Ulož Hru" />
-                           <MenuItem mnemonicParsing="false" onAction="#handleLoadGame" text="Načítaj Hru" />
-                           <MenuItem mnemonicParsing="false" onAction="#exitApplication" text="Ukončiť" />
+                                <MenuItem mnemonicParsing="false" onAction="#handleSaveGame" text="Ulož Hru" />
+                                <MenuItem mnemonicParsing="false" onAction="#handleLoadGame" text="Načítaj Hru" />
+                                <MenuItem mnemonicParsing="false" onAction="#exitApplication" text="Ukončiť" />
                             </items>
                         </Menu>
+                     <Menu mnemonicParsing="false" text="Výsledky">
+                        <items>
+                           <MenuItem mnemonicParsing="false" onAction="#handleShowScore" text="Zobraziť" />
+                           <MenuItem mnemonicParsing="false" onAction="#handleResetScore" text="Reset" />
+                        </items></Menu>
                     </menus>
                 </MenuBar>
             </VBox>

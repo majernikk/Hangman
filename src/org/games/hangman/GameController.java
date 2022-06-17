@@ -1,14 +1,15 @@
 package org.games.hangman;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
 import java.io.*;
 import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 class GameController {
@@ -23,6 +24,11 @@ class GameController {
     private static Instant start;
     public static Double koniec;
     public int navyse=0;
+
+    private ArrayList<Double> scoreList = new ArrayList<Double>();
+
+    Alert a = new Alert(Alert.AlertType.NONE);
+    Alert b = new Alert(Alert.AlertType.NONE);
 
     GameController() {
         enteredChars = new ArrayList<>();
@@ -71,53 +77,63 @@ class GameController {
         return word;
     }
 
+//metoda na ukladanie stavu hry
     void save(){
         try {
             File file = new File("ukladanie.txt");
             if (!file.exists()) {
                 file.createNewFile();
             }
-            FileWriter fw = new FileWriter(file);
-            BufferedWriter zapisovac = new BufferedWriter(fw);
+            FileWriter fw1 = new FileWriter(file);
+            BufferedWriter zapisovac1 = new BufferedWriter(fw1);
             //to co ukladame
-            zapisovac.write(String.valueOf(wrongGuesses));
-            zapisovac.newLine();
-            //TODO
+            zapisovac1.write(String.valueOf(wrongGuesses));
+            zapisovac1.newLine();
             for (char c:enteredChars) {
-                zapisovac.append(c);
+                zapisovac1.append(c);
             }
-            zapisovac.newLine();
+            zapisovac1.newLine();
 
-            zapisovac.write(rndWord);
-            zapisovac.newLine();
-            zapisovac.write(""+Duration.between(start, Instant.now()).toMillis());
-            zapisovac.flush();
+            zapisovac1.write(rndWord);
+            zapisovac1.newLine();
+            zapisovac1.write(""+Duration.between(start, Instant.now()).toMillis());
+            zapisovac1.flush();
             System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
             System.out.println("An error occurred while writing.");
             e.printStackTrace();
         }
     }
+
+    //metoda na nacitanie stavu hry
     void load() {
         File file = new File("ukladanie.txt");
+        if (file.length() != 0) {
+            try (BufferedReader br1 = new BufferedReader(new FileReader(file)))
+            {
+                wrongGuesses=Integer.valueOf(br1.readLine());
+                String tmp = br1.readLine();
+                tmp = tmp.trim();
+                enteredChars.clear();
+                for (char c: tmp.toCharArray()){
+                    enteredChars.add(c);
+                }
+                rndWord= br1.readLine();
+                navyse= Integer.parseInt(br1.readLine());
+                System.out.println("Random word: "+rndWord);
 
-        try (BufferedReader br = new BufferedReader(new FileReader(file)))
-        {
-            wrongGuesses=Integer.valueOf(br.readLine());
-            String tmp = br.readLine();
-            tmp = tmp.trim();
-            enteredChars.clear();
-            for (char c: tmp.toCharArray()){
-                enteredChars.add(c);
+            } catch (IOException e) {
+                System.out.println("An error occurred while reading.");
+                e.printStackTrace();
             }
-            rndWord= br.readLine();
-            navyse= Integer.parseInt(br.readLine());
-
-        } catch (IOException e) {
-            System.out.println("An error occurred while reading.");
-            e.printStackTrace();
+        } else {
+            a.setAlertType(Alert.AlertType.WARNING);
+            a.setContentText("Nie je uložená žiadna hra");
+            a.show();
         }
     }
+
+    //metoda na nacitanie novej hry
     void reset() {
         wrongGuesses = 0;
         enteredChars.clear();
@@ -157,6 +173,8 @@ class GameController {
         return Collections.unmodifiableList(enteredChars);
     }
 
+
+    //overovanie stavu hry -> ci je hra prehrata
     boolean isGameOver() {
         return wrongGuesses >= MAX_WRONG_GUESSES;
     }
@@ -169,8 +187,74 @@ class GameController {
         }
         Instant finish = Instant.now();
         koniec = ((double) Duration.between(start, finish).toMillis()+navyse) /1000;
+        writeScore();
         System.out.println("Cas: "+koniec);
         return true;
     }
 
+    private void writeScore(){
+        try {
+            File file = new File("scoreHistory.txt");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            scoreList.clear();
+            readScore();
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter zapisovac = new BufferedWriter(fw);
+            scoreList.add(koniec);
+            Collections.sort(scoreList);
+            for (Double d: scoreList) {
+                zapisovac.write(String.valueOf(d));
+                zapisovac.newLine();
+            }
+            zapisovac.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing.");
+            e.printStackTrace();
+        }
+    }
+    private void readScore(){
+        File file = new File("scoreHistory.txt");
+        if (file.length() != 0) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file)))
+            {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    scoreList.add(Double.parseDouble(line));
+                }
+            } catch (IOException e) {
+                System.out.println("Nastala chyba pri načítavaní.");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void showScore() {
+        scoreList.clear();
+        readScore();
+        b.setAlertType(Alert.AlertType.INFORMATION);
+        b.setTitle("Rebríček");
+        b.setHeaderText("Najlepšie časy: ");
+        if (scoreList.size()>=3)
+            b.setContentText("1.miesto: "+scoreList.get(0)+"s\n2.miesto: "+scoreList.get(1)+"s\n3.miesto: "+scoreList.get(2)+"s");
+        if (scoreList.size()==2)
+            b.setContentText("1.miesto: "+scoreList.get(0)+"s\n2.miesto: "+scoreList.get(1)+"s");
+        if (scoreList.size()==1)
+            b.setContentText("1.miesto: "+scoreList.get(0)+"s");
+        if (scoreList.size()<=0)
+            b.setContentText("Neboli nájdené žiadne výsledky.");
+        b.show();
+    }
+
+    public void resetScore() {
+        File file = new File("scoreHistory.txt");
+        try {
+            new FileWriter(file, false).close();
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

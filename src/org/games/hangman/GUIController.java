@@ -8,20 +8,13 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
-import javafx.scene.input.InputEvent;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import org.games.controls.LetterTextField;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -90,6 +83,7 @@ public class GUIController implements Initializable {
         gc.fillText(gameController.getMissingChars(), 70, canvas.getHeight() - 60);
     }
 
+    //metoda na rozhodovanie vysledku hry
     private void checkGameOver() {
         if (gameController.isGameWon()) {
             // Return game won message
@@ -117,10 +111,22 @@ public class GUIController implements Initializable {
         loadGame();
     }
     @FXML
+    public void handleShowScore(ActionEvent actionEvent) {
+        showScore();
+    }
+    @FXML
+    public void handleResetScore(ActionEvent actionEvent) {
+        resetScore();
+    }
+
+    @FXML
     public void exitApplication(ActionEvent event) {
         Platform.exit();
     }
 
+    private void resetScore() {
+        gameController.resetScore();
+    }
     private void disableGame() {
         txtInput.setDisable(true);
     }
@@ -129,16 +135,22 @@ public class GUIController implements Initializable {
        gameController.save();
     }
     private void loadGame() {
-        gameController.load();
-        txtEntered.clear();
-        txtInput.setDisable(false);
-        gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
-        updateEnteredChars();
-        updateWord();
-        //TODO wrong guesses
-        for (int i = 1; i <= gameController.getWrongGuesses(); i++) {
-            drawHangman(i);
+        try {
+            gameController.load();
+            txtEntered.clear();
+            txtInput.setDisable(false);
+            gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
+            updateEnteredChars();
+            updateWord();
+            for (int i = 1; i <= gameController.getWrongGuesses(); i++) {
+                drawHangman(i);
+            }
+        }catch(Exception e){
+            //TODO
         }
+    }
+    private void showScore() {
+        gameController.showScore();
     }
     private void resetGame() {
         gameController.reset();
@@ -165,6 +177,7 @@ public class GUIController implements Initializable {
         gc.fillText("Prehral si :(", Math.round(canvas.getWidth() / 2), Math.round(canvas.getHeight()) / 2);
     }
 
+    //vykreslovanie panacika
     private void drawHangman(int wrongGuesses) {
         switch (wrongGuesses) {
             case 1:
@@ -191,6 +204,7 @@ public class GUIController implements Initializable {
         }
     }
 
+    //metody na vykreslovanie jednotlivych casti panacika na platno
     private void drawFace() {
         gc.beginPath();
         gc.moveTo(135, 75);
