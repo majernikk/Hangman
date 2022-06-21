@@ -14,7 +14,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("game.fxml"));
-        primaryStage.setTitle("Obesenec");
+        primaryStage.setTitle("Obesenec - Autori: Kristián Majerník, Jakub Šramko");
         primaryStage.setResizable(false);
         primaryStage.setScene(new Scene(root, 700, 500));
         Image icon = new Image(getClass().getResourceAsStream("icon.png"));

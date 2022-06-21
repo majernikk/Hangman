@@ -24,6 +24,7 @@ import static org.games.hangman.GameController.*;
 public class GUIController implements Initializable {
 
     private static final Font fontLarge = Font.font("Droid Sans", FontWeight.BOLD, 35);
+    private static final Font fontSmall = Font.font("Droid Sans", FontWeight.BOLD, 15);
     private static final Font fontWord = Font.font("Courier New", FontWeight.BOLD, 20);
 
     @FXML
@@ -184,6 +185,9 @@ public class GUIController implements Initializable {
         gc.setTextBaseline(VPos.CENTER);
         gc.fillText("Vyhral si!", Math.round(canvas.getWidth() / 2), Math.round(canvas.getHeight()) / 2);
         gc.fillText(String.valueOf(koniec)+"s", Math.round(canvas.getWidth() / 2), (Math.round(canvas.getHeight())/2)-40);
+        gc.setFont(fontSmall);
+        gc.setFill(Color.GRAY);
+        gc.fillText("Autori: Kristián Majerník, Jakub Šramko",Math.round(canvas.getWidth()-150) ,(Math.round(canvas.getHeight()))-20);
     }
 
     private void drawGameOver() {
@@ -192,6 +196,9 @@ public class GUIController implements Initializable {
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
         gc.fillText("Prehral si :(", Math.round(canvas.getWidth() / 2), Math.round(canvas.getHeight()) / 2);
+        gc.setFont(fontSmall);
+        gc.setFill(Color.GRAY);
+        gc.fillText("Autori: Kristián Majerník, Jakub Šramko",Math.round(canvas.getWidth()-150) ,(Math.round(canvas.getHeight()))-20);
     }
 
     //vykreslovanie panacika
